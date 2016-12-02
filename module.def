@@ -1,0 +1,6 @@
+[Module]
+Name=sPvP
+Dependencies=minionlib,GW2Minion
+Version=1
+Files=spvp.lua
+Enabled=1
