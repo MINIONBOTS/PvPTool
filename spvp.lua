@@ -113,21 +113,37 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 				-- Battle of Champions
 				if ( currentmapid == 1011 ) then	
 					if ( math.distance3d(gate.pos, { x= -4584, y= 4152, z= -900 }) < 100 ) then return true end 	-- Blue Team
-					
-					
+										
 				-- Forest of Nifhel
 				elseif( currentmapid == 554 ) then
-				
 					if ( math.distance3d(gate.pos, { x= 2463.81, y= -426.95, z= -845.65 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= -2863.18, y= -436.46, z= -853.12 }) < 100 ) then return true end 	-- Blue Team
 					
 				-- Skyhammer
 				elseif( currentmapid == 900 ) then
-				
+					if ( math.distance3d(gate.pos, { x= -1394.88, y= 4965.36, z= -3141.97 }) < 100 ) then return true end 	-- Red Team
 					if ( math.distance3d(gate.pos, { x= -1382.77, y= -1630.64, z= -3141.97 }) < 100 ) then return true end 	-- Blue Team
 					
-				-- Revenge of the Capricorn
-					
-					
+				-- Vermächtnis des Feindfeuers
+				elseif( currentmapid == 795 ) then
+					if ( math.distance3d(gate.pos, { x= -1990.01, y= -2303.84, z= -934.43 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= 7969.79, y= 5774.64, z= -1222.82 }) < 100 ) then return true end 	-- Blue Team	
+				
+				-- Geisterwacht
+				elseif( currentmapid == 894 ) then
+					if ( math.distance3d(gate.pos, { x= -512.29, y= -3040.79, z= -575.66 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= 2328.14, y= -3184.49, z= -570.14 }) < 100 ) then return true end 	-- Blue Team	
+				
+				-- Die Schlacht von Kyhlo
+				elseif( currentmapid == 549 ) then
+					if ( math.distance3d(gate.pos, { x= -3433.52, y= 2744.00, z= -513.18 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= 3027.34, y= -3805.32, z= -510.92 }) < 100 ) then return true end 	-- Blue Team
+
+				-- Ewiges Kolosseum
+				elseif( currentmapid == 1171 ) then
+					if ( math.distance3d(gate.pos, { x= 4934.04, y= -2995.06, z= -500.07 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= -4947.09, y= 3018.45, z= -500.07 }) < 100 ) then return true end 	-- Blue Team
+											
 				end
 			end
 			id,gate = next (gatelist,id)
