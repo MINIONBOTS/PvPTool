@@ -106,7 +106,7 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 		local currentmapid = Player.localmapid or 0
 		local id, gate = next(gatelist)
 		while ( id and gate ) do
-			if(( gate.type == 5 and gate.status == 464399) or (gate.type == 17 )    ) then
+			if(( gate.type == 5 and gate.status == 464399) or (gate.type == 17 )) then
 
 -- TODO: ADD ALL OTHER POSITIONS NEAR THE GATES OF EACH MAP HERE	
 				
@@ -150,15 +150,6 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 		end
 	end  
 
-
-	-- Just use the nearest Gate as fallback
-   	local gatelist = GadgetList("nearest,contentid=17513")
-	if ( table.valid(gatelist) ) then
-		local id, gate = next(gatelist)
-		if( id and gate and (gate.type == 5 and gate.status == 464399) or (gate.type == 17 )       ) then
-			return true
-		end
-	end	
    return false
 end
 
