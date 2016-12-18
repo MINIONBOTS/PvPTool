@@ -1,8 +1,7 @@
 ﻿local spvp = {} -- important to define this as local, else other users can access and steal your code!
 spvp.modulefunctions = GetPrivateModuleFunctions()
 spvp.btreecontext = {}
-
-
+spvp.gateswhereclosed = false
 
 -- Required for private addons with additional private sub-behavior trees
 function spvp.LoadSubtreeData(filename)
@@ -149,6 +148,7 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 			id,gate = next (gatelist,id)
 		end
 	end  
+	
 
    return false
 end
@@ -201,6 +201,6 @@ function spvp.GetContext()
 	spvp.btreecontext.PvPStartGatesOpen = spvp.btreecontext.PvPStartGatesOpen
 	spvp.btreecontext.PvPFightStarted = spvp.btreecontext.PvPFightStarted
 	spvp.btreecontext.PvPGetBestCapturePoint = spvp.btreecontext.PvPGetBestCapturePoint
-	
+		
 	return spvp.btreecontext
 end
