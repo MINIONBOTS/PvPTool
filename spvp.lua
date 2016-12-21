@@ -162,7 +162,7 @@ spvp.btreecontext.PvPFightStarted = function()
 		while ( id ~= nil ) do
 			if ( v.incombat ) then 
 				local hp = v.health
-				if (table.valid(hp) and hp.percent > 0 and hp.percent < 100 )then
+				if (table.valid(hp) and hp.percent > 0 and hp.percent < 80 )then
 					return true
 				end
 			end
