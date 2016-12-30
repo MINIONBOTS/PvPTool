@@ -83,7 +83,7 @@ local tbl =
 														info = "Joining & Queueing up.",
 														menucode = "",
 														monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-														runcode = "-- Join PvP Lobby\nif (PvPManager:IsInPvPLobby() == false) then\n\t\tif ( ml_global_information.Player_InCombat ) then\n\t\t\t\td(\"[sPvP] - Player In Combat, cannot join sPvP Lobby...\")\n\t\t\t\tcontext.status = GetString(\"Player In Combat, cannot join sPvP Lobby..\")\n\t\t\t\tself:fail()\n\n\t\telse\n\t\t\t\td(\"[sPvP] -  Joining sPvP Lobby :\"..tostring(PvPManager:JoinPvPLobby()))\n\t\t\t\tcontext.status = GetString(\"Joining sPvP Lobby..\")\n\t\t\t\tself:running()\n\tend\n\nelse\n\t\t-- We are in the Lobby, Join a Match\n\t\tif ( PvPManager:IsInMatch() == false ) then\n\t\t\t\tif ( PvPManager:IsArenaQueued() == false ) then\n\t\t\t\t\t\tif ( Settings.sPvP.queuemode == 1 ) then\n\t\t\t\t\t\t\t\td(\"[sPvP] - Joining Unranked Queue: \"..tostring(PvPManager:JoinArenaQueue(1)))\n\t\t\t\t\t\t\t\tcontext.status = GetString(\"Joined Unranked Queue..\")\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\td(\"[sPvP] - Joining Ranked Queue: \"..tostring(PvPManager:JoinArenaQueue(2)))\n\t\t\t\t\t\t\t\tcontext.status = GetString(\"Joined Ranked Queue..\")\n\t\t\t\t\t\tend\n\t\t\t\t\t\tcontext.setready = nil\n\t\t\t\t\t\tcontext.setready2 = nil\n\t\t\t\t\t\tself:fail()\n\t\t\t\telse\n\t\t\t\t\t\t-- Waiting for a match to come available...\n\t\t\t\t\t\tif(PvPManager:IsMatchAvailable() )then\n\t\t\t\t\t\t\t\td(\"[sPvP] - Match Available\")\n\t\t\t\t\t\t\t\tcontext.status = GetString(\"Match Available..\")\n\t\t\t\t\t\t\t\tif ( not context.setready ) then\n\t\t\t\t\t\t\t\t\t\td(\"[sPvP] - Set Ready for Match: \"..tostring(PvPManager:SetReady()))\n\t\t\t\t\t\t\t\t\t\tcontext.status = GetString(\"Match Available..Ready!\")\n\t\t\t\t\t\t\t\t\t\tcontext.setready = true\n\t\t\t\t\t\t\t\tend\n\t\t\t\t\t\tend\n\t\t\t\t\t\tself:fail()\n\t\t\t\tend\n\t\tend\nend\n",
+														runcode = "-- Join PvP Lobby\nif (PvPManager:IsInPvPLobby() == false) then\n\t\tif ( ml_global_information.Player_InCombat ) then\n\t\t\t\td(\"[sPvP] - Player In Combat, cannot join sPvP Lobby...\")\n\t\t\t\tcontext.status = GetString(\"Player In Combat, cannot join sPvP Lobby..\")\n\t\t\t\tself:fail()\n\n\t\telse\n\t\t\t\td(\"[sPvP] -  Joining sPvP Lobby :\"..tostring(PvPManager:JoinPvPLobby()))\n\t\t\t\tcontext.status = GetString(\"Joining sPvP Lobby..\")\n\t\t\t\tself:running()\n\tend\n\nelse\n\t\t-- We are in the Lobby, Join a Match\n\t\tif ( PvPManager:IsInMatch() == false ) then\n\t\t\t\tif ( PvPManager:IsArenaQueued() == false ) then\n\t\t\t\t\t\tif ( Settings.sPvP.queuemode == 1 ) then\n\t\t\t\t\t\t\t\td(\"[sPvP] - Joining Unranked Queue: \"..tostring(PvPManager:JoinArenaQueue(1)))\n\t\t\t\t\t\t\t\tcontext.status = GetString(\"Joined Unranked Queue..\")\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\td(\"[sPvP] - Joining Ranked Queue: \"..tostring(PvPManager:JoinArenaQueue(2)))\n\t\t\t\t\t\t\t\tcontext.status = GetString(\"Joined Ranked Queue..\")\n\t\t\t\t\t\tend\n\t\t\t\t\t\tcontext.setready = nil\n\t\t\t\t\t\tcontext.setready2 = nil\n\t\t\t\t\t\tself:fail()\n\t\t\t\telse\n\t\t\t\t\t\t-- Waiting for a match to come available...\n\t\t\t\t\t\tif(PvPManager:IsMatchAvailable() )then\n\t\t\t\t\t\t\t\td(\"[sPvP] - Match Available\")\n\t\t\t\t\t\t\t\tcontext.status = GetString(\"Match Available..\")\n\t\t\t\t\t\t\t\tif ( not context.setready ) then\n\t\t\t\t\t\t\t\t\t\td(\"[sPvP] - Set Ready for Match: \"..tostring(PvPManager:SetReady()))\n\t\t\t\t\t\t\t\t\t\tcontext.status = GetString(\"Match Available..Ready!\")\n\t\t\t\t\t\t\t\t\t\tcontext.setready = true\n\t\t\t\t\t\t\t\tend\n\t\t\t\t\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\t-- when the match failes to start, a 2nd ismatchavailable screen pops up...need to handle the setready again\n\t\t\t\t\t\t\t\tcontext.setready = nil\n\n\t\t\t\t\t\tend\n\t\t\t\t\t\tself:fail()\n\t\t\t\tend\n\t\tend\nend\n",
 														startcode = "",
 														subtreeuicode = "",
 													},
@@ -91,7 +91,7 @@ local tbl =
 											},
 											settings = 
 											{
-												duration = 2500,
+												duration = 5000,
 											},
 											variables = 
 											{
@@ -247,7 +247,7 @@ local tbl =
 										info = "Check if the Match has not yet started",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "-- Update our Team\nif ( not context.currentteam ) then\n -- 1 = red / 2 = blue\t\n\t\tlocal curTeam = PvPManager:GetTeam(1)\n\t\n\t\tif ( ValidTable(curTeam) ) then\n\t\t\t\tcontext.currentteam = \"blue\"\n\t\t\t\tlocal id,v = next(curTeam)\n\t\t\t\twhile ( id ~= nil ) do\n\t\t\t\t\t\tif Player.id == v.id then\n\t\t\t\t\t\t\t\tcontext.currentteam = \"red\"\n\t\t\t\t\t\t\t\tbreak\n\t\t\t\t\t\tend\n\t\t\t\t\t\tid,v = next(curTeam, id)\n\t\t\t\tend\n\t\t\t\td(\"[sPvP] - Current Team is : \"..tostring(context.currentteam))\n\n\t\t\t\t-- Setting Ready ingame once\n\t\t\t\tif ( not context.setready2 ) then\t\t\n\t\t\t\t\t\td(\"[sPvP] - Set Ready for Match: \"..tostring(PvPManager:SetReady()))\n\t\t\t\t\t\tcontext.setready2 = true\n\t\t\t\t\t\tcontext.status = \"Ready, Waiting for start..\" \n\t\t\t\tend\n\t\tend\nend\n\n\n-- Check if the Match has started\nif(PvPManager:GetScore(1) == 0 and PvPManager:GetScore(2) == 0) then\n\t\tlocal duration = PvPManager:GetMatchDuration()\n\n\t\tif (duration < 100000) then\n\t\t\t\tif (not context.PvPStartGatesOpen()) then\n\t\t\t\t\t\tcontext.gatewasclosed = true\t\t\t\n\t\t\t\t\t\tself:success() -- we need to wait before the match starts\n\t\t\t\t\t\treturn\n\t\t\t\telse\n\t\t\t\t\t\tif (duration < 15000 or ( duration > 15000 and not context.gatewasclosed)) then\n\t\t\t\t\t\t\t\tself:success() -- we need to wait before the match starts\n\t\t\t\t\t\t\t\treturn\n\t\t\t\t\t\tend\t\t\n\t\t\t\tend\n\n\t\telse\n\t\t\t\t-- this can fail due to being able to take damage before the match actually started..i think..\n\t\t\t\tif (context.PvPFightStarted()) then \n\t\t\t\t\t\tself:fail()\n\t\t\t\t\t\treturn\n\t\t\t\tend\n\t\tend\nend\n-- Match has already started\ncontext.status = \"Match started..\" \nself:fail()",
+										runcode = "-- Update our Team\nif ( not context.currentteam ) then\n -- 1 = red / 2 = blue\t\n\t\tlocal curTeam = PvPManager:GetTeam(1)\n\t\n\t\tif ( ValidTable(curTeam) ) then\n\t\t\t\tcontext.currentteam = \"blue\"\n\t\t\t\tlocal id,v = next(curTeam)\n\t\t\t\twhile ( id ~= nil ) do\n\t\t\t\t\t\tif Player.id == v.id then\n\t\t\t\t\t\t\t\tcontext.currentteam = \"red\"\n\t\t\t\t\t\t\t\tbreak\n\t\t\t\t\t\tend\n\t\t\t\t\t\tid,v = next(curTeam, id)\n\t\t\t\tend\n\t\t\t\td(\"[sPvP] - Current Team is : \"..tostring(context.currentteam))\n\n\t\t\t\t-- Setting Ready ingame once\n\t\t\t\tif ( not context.setready2 ) then\t\t\n\t\t\t\t\t\td(\"[sPvP] - Set Ready for Match: \"..tostring(PvPManager:SetReady()))\n\t\t\t\t\t\tcontext.setready2 = true\n\t\t\t\t\t\tcontext.status = \"Ready, Waiting for start..\" \n\t\t\t\tend\n\t\tend\nend\n\n\n-- Check if the Match has started\nif(PvPManager:GetScore(1) == 0 and PvPManager:GetScore(2) == 0) then\n\t\tlocal duration = PvPManager:GetMatchDuration()\n\n\t\tif (duration < 100000) then\n\t\t\t\tif (not context.PvPStartGatesOpen()) then\n\t\t\t\t\t\tcontext.gatewasclosed = true\t\t\t\n\t\t\t\t\t\tself:success() -- we need to wait before the match starts\n\t\t\t\t\t\treturn\n\t\t\t\telse\n\t\t\t\t\t\tif (duration < 15000 or ( duration > 15000 and not context.gatewasclosed)) then\n\t\t\t\t\t\t\t\tself:success() -- we need to wait before the match starts\n\t\t\t\t\t\t\t\treturn\n\t\t\t\t\t\tend\t\t\n\t\t\t\tend\n\n\t\telse\n\t\t\t\t-- this can fail due to being able to take damage before the match actually started..i think..\n\t\t\t\tif (context.PvPFightStarted()) then \n\t\t\t\t\t\tself:fail()\n\t\t\t\t\t\treturn\n\t\t\t\tend\n\t\tend\nend\n-- Match has already started\nself:fail()",
 										startcode = "",
 										subtreeuicode = "",
 									},
@@ -260,7 +260,7 @@ local tbl =
 									},
 									settings = 
 									{
-										duration = 5000,
+										duration = 15000,
 									},
 									variables = 
 									{
@@ -284,7 +284,7 @@ local tbl =
 										info = "TODO: Add random movement or Jump here while we are waiting.",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local boink = math.random(1,5)\nif (boink == 1 ) then\n\t\tPlayer:Jump()\nend\n\nif (boink == 2 ) then\n\t\tPlayer:CastSpell(math.random(5,9))\nend\n\nself:success()",
+										runcode = "local boink = math.random(1,6)\nif (boink == 1 ) then\n\t\tPlayer:Jump()\nend\n\nif (boink == 2 ) then\n\t\tPlayer:CastSpell(math.random(5,9))\nend\n\nself:success()",
 										startcode = "",
 										subtreeuicode = "",
 									},
@@ -360,7 +360,7 @@ local tbl =
 										finishcode = "",
 										info = "Find Aggro Target and Set the aggro context.combat_targetid",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local target = gw2_common_functions.GetBestAggroTarget()\nif (table.valid(target) and not gw2_blacklistmanager.CheckBlacklistEntry(GetString(\"Monsters\"),target.contentid)) then\n\tlocal pdist = target.pathdistance\n\tif ( pdist < 9999999 ) then\n\t\tif(context.combat_targetid ~= target.id) then\n\t\t\t\tPlayer:StopMovement()\n\t\tend\n\t\tcontext.combat_targetid = target.id\n\t\tcontext.combat_moveintocombatrange = true\n\t\tcontext.status = \"Attacking Enemy (ID:\"..tostring(context.combat_targetid)..\")\"\n\t\tself:success()\n\t\treturn\n\telse\n\t\tgw2_blacklistmanager.AddBlacklistEntry(GetString(\"Monsters\"), target.contentid, target.name, ml_global_information.Now + 90000)\n\tend\n\tcontext.combat_targetid = nil\nend\nself:fail()\n",
+										runcode = "local target = context.GetBestAggroTarget()\nif (table.valid(target)) then\n\t\tif(context.combat_targetid ~= target.id) then\n\t\t\t\tPlayer:StopMovement()\n\t\tend\n\t\tcontext.combat_targetid = target.id\n\t\tcontext.combat_moveintocombatrange = true\n\t\tcontext.status = \"Attacking Enemy (ID:\"..tostring(context.combat_targetid)..\")\"\n\t\tself:success()\n\t\treturn\n\nelse\n\t\tcontext.combat_targetid = nil\nend\nself:fail()\n",
 										startcode = "",
 									},
 								},
@@ -527,28 +527,32 @@ local tbl =
 									{
 										filename = "",
 										finishcode = "",
-										info = "Find a Capture Point",
+										info = "Find and walk to a Capture Point",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance < 200 ) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point..\"\n\t\t\t\td(\"[sPvP] - Capturing Point...\")\t\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\t\n\t\telse\n\t\t\t\n\t\t\t\tlocal pos = gadget.pos\n\t\t\t\tml_navigation:MoveTo(pos.x, pos.y, pos.z)\n\t\t\t\tself:success()\n\t\t\t\treturn\t\t\t\t\t\t\t\t\t\t\n\t\tend\t\t\t\nend\nself:fail()\n",
+										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance >= 200 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Walking to Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\t\t\t\t\t\t\t\t\t\t\n\t\tend\t\t\t\nend\nself:fail()\n",
 										startcode = "",
 										subtreeuicode = "",
 									},
 								},
 								
 								{
-									class = "Wait",
+									class = "SubTree",
 									nodes = 
 									{
 									},
 									settings = 
 									{
-										duration = 1000,
+										randomMovement = true,
+										randomizestoppingdistance = false,
+										smoothturns = true,
+										stoppingdistance = 75,
+										stoppingidstancemaxrange = 50,
+										usewaypoints = false,
 									},
 									variables = 
 									{
-										info = "Waiting to Capture Point",
-										monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) if ( self.starttime ) then\tif ( self:getState() == 'success' ) then GUI:Text('Passed Time: '..tostring(round(self.settings.duration/1000))..' s') else GUI:Text('Passed Time: '..tostring(round(GetTickCount() - self.starttime,2 ))..' s') end else GUI:Text('Passed Time: 0 ms') end",
+										filename = "MoveTo.st",
 									},
 								},
 							},
@@ -557,8 +561,25 @@ local tbl =
 							},
 							variables = 
 							{
-								info = "Capture Flags",
 								monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) GUI:Text('Active Child: '..tostring(self.actualTask or 'None'))",
+							},
+						},
+						
+						{
+							class = "Action",
+							nodes = 
+							{
+							},
+							settings = 
+							{
+							},
+							variables = 
+							{
+								finishcode = "",
+								info = "Capturing Point",
+								monitorcode = "",
+								runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance < 200 ) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n",
+								startcode = "",
 							},
 						},
 						
@@ -580,7 +601,7 @@ local tbl =
 										finishcode = "if ( context.smmode ) then\n\t\tSettings.GW2Minion.smmode = context.smmode\nend",
 										info = "Find Target and Set the aggro context.combat_targetid",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "-- saving the current setting, so it can be restored on finishing this node\ncontext.smmode = Settings.GW2Minion.smmode\n\n-- Set SkillManager to search for players first\nSettings.GW2Minion.smmode = 2\nlocal target = gw2_common_functions.GetBestCharacterTargetForAssist( true ) \nif (table.valid(target) and not target.dead and target.attackable and not gw2_blacklistmanager.CheckBlacklistEntry(GetString(\"Monsters\"),target.contentid)) then\n\tlocal pdist = target.pathdistance\n\tif ( pdist < 999999 ) then\n\t\tcontext.combat_targetid = target.id\n\t\tself:success()\n\t\treturn\n\telse\n\t\tgw2_blacklistmanager.AddBlacklistEntry(GetString(\"Monsters\"), target.contentid, target.name, ml_global_information.Now + 30000)\n\tend\nend\n\n-- Search for aggro NPCs n cheese 2rd\nlocal target = gw2_common_functions.GetBestAggroTarget()\nif (table.valid(target) and not target.dead and target.attackable and not gw2_blacklistmanager.CheckBlacklistEntry(GetString(\"Monsters\"),target.contentid)) then\n\tlocal pdist = target.pathdistance\n\tif ( pdist < 999999 ) then\n\t\tcontext.combat_targetid = target.id\n\t\tself:success()\n\t\treturn\n\telse\n\t\tgw2_blacklistmanager.AddBlacklistEntry(GetString(\"Monsters\"), target.contentid, target.name, ml_global_information.Now + 30000)\n\tend\nend\n\n-- Search for NPCs n cheese 3nd\nSettings.GW2Minion.smmode = 1\nlocal target = gw2_common_functions.GetBestAggroTarget(true)\nif (table.valid(target) and not target.dead and target.attackable and not gw2_blacklistmanager.CheckBlacklistEntry(GetString(\"Monsters\"),target.contentid)) then\n\tlocal pdist = target.pathdistance\n\tif ( pdist < 999999 ) then\n\t\tcontext.combat_targetid = target.id\n\t\tself:success()\n\t\treturn\n\telse\n\t\tgw2_blacklistmanager.AddBlacklistEntry(GetString(\"Monsters\"), target.contentid, target.name, ml_global_information.Now + 30000)\n\tend\nend\ncontext.combat_targetid = nil\nself:fail()",
+										runcode = "-- Getting the nearest enemy on the map\nlocal enemylist = CharacterList(\"attackable,player,hostile,alive,nearest,shortestpath,exclude_contentid=\"..gw2_blacklistmanager.GetExcludeString(GetString(\"Monsters\")))\nif(table.valid(enemylist)) then\n\t\tlocal id,target = next(enemylist)\n\t\tif(table.valid(target)) then\n\t\t\t\tcontext.combat_targetid = id\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n\n",
 										startcode = "",
 									},
 								},

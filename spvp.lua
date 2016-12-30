@@ -182,8 +182,8 @@ spvp.btreecontext.PvPGetBestCapturePoint = function()
 			if (spvp.btreecontext.currentteam == "red" and gadget.status == 185730 or
 				spvp.btreecontext.currentteam == "blue" and gadget.status == 4274 or
 				gadget.status == 3267563698 or
-				gadget.status == 207234327) then
-				--gadget.status == 5907735) then		
+				gadget.status == 207234327 or
+				gadget.status == 5907735) then		
 				if ( gadget.pathdistance < 999999  and ( not nearestcapturepoint or gadget.distance < nearestcapturepoint.distance)) then
 					nearestcapturepoint = gadget
 				end				
@@ -196,11 +196,42 @@ spvp.btreecontext.PvPGetBestCapturePoint = function()
 	end	
 end
 
+spvp.btreecontext.GetBestAggroTarget = function()
+	local range = ml_global_information.AttackRange or 750
+	
+	if ( range < 200 ) then range = 750 end -- extend search range a bit for melee chars
+	if ( range > 1000 ) then range = 1000 end -- limit search range a bit for ranged chars
+	
+	-- Try to get Aggro Enemy Players with los in range first
+	local target = gw2_common_functions.GetCharacterTargetExtended("player,onmesh,lowesthealth,maxdistance="..tostring(range))
+		
+	if(table.valid(target) and (not target.attackable or target.pathdistance >= 9999999)) then
+		gw2_blacklistmanager.AddBlacklistEntry(GetString("Monsters"), target.contentid, target.name, 5000)
+		d("[GetBestAggroTarget] - Blacklisting "..target.name.." ID: "..tostring(target.contentid))
+		target = nil
+	end
+	
+	if ( target and target.id ) then
+		if ( target.distance < 1500 and target.los ) then
+			Player:SetTarget(target.id)
+		end
+		return target
+	else
+
+		local currTarget = Player:GetTarget()
+		if ( currTarget ~= nil and currTarget.attackable ) then
+			return target
+		end
+	end
+	return nil
+end
+
 -- Is called when the BTree is started. Allows us to supply a custom context table to the BTree
 function spvp.GetContext()
 	spvp.btreecontext.PvPStartGatesOpen = spvp.btreecontext.PvPStartGatesOpen
 	spvp.btreecontext.PvPFightStarted = spvp.btreecontext.PvPFightStarted
 	spvp.btreecontext.PvPGetBestCapturePoint = spvp.btreecontext.PvPGetBestCapturePoint
+	spvp.btreecontext.GetBestAggroTarget = spvp.btreecontext.GetBestAggroTarget
 		
 	return spvp.btreecontext
 end
