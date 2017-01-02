@@ -511,6 +511,24 @@ local tbl =
 						},
 						
 						{
+							class = "Action",
+							nodes = 
+							{
+							},
+							settings = 
+							{
+							},
+							variables = 
+							{
+								finishcode = "",
+								info = "Capturing Point",
+								monitorcode = "",
+								runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance <= 200 ) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n",
+								startcode = "",
+							},
+						},
+						
+						{
 							class = "Sequence",
 							nodes = 
 							{
@@ -530,7 +548,7 @@ local tbl =
 										info = "Find and walk to a Capture Point",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance >= 200 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Walking to Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\t\t\n\t\telse\n\t\t\t\tcontext.status = \"Capturing Point..\"\n\t\t\t\tself:running()\n\t\t\t\treturn\n\t\tend\t\t\t\nend\nself:fail()\n",
+										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance > 200 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Walking to Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\t\t\t\nend\nself:fail()\n",
 										startcode = "",
 										subtreeuicode = "",
 									},
@@ -543,10 +561,10 @@ local tbl =
 									},
 									settings = 
 									{
-										randomMovement = true,
+										randomMovement = false,
 										randomizestoppingdistance = false,
 										smoothturns = true,
-										stoppingdistance = 75,
+										stoppingdistance = 150,
 										stoppingidstancemaxrange = 50,
 										usewaypoints = false,
 									},
@@ -562,24 +580,6 @@ local tbl =
 							variables = 
 							{
 								monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) GUI:Text('Active Child: '..tostring(self.actualTask or 'None'))",
-							},
-						},
-						
-						{
-							class = "Action",
-							nodes = 
-							{
-							},
-							settings = 
-							{
-							},
-							variables = 
-							{
-								finishcode = "",
-								info = "Capturing Point",
-								monitorcode = "",
-								runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance < 200 ) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n",
-								startcode = "",
 							},
 						},
 						
