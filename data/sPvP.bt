@@ -530,7 +530,7 @@ local tbl =
 										info = "Find and walk to a Capture Point",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance >= 200 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Walking to Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\t\t\t\t\t\t\t\t\t\t\n\t\tend\t\t\t\nend\nself:fail()\n",
+										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance >= 200 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Walking to Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\t\t\n\t\telse\n\t\t\t\tcontext.status = \"Capturing Point..\"\n\t\t\t\tself:running()\n\t\t\t\treturn\n\t\tend\t\t\t\nend\nself:fail()\n",
 										startcode = "",
 										subtreeuicode = "",
 									},
