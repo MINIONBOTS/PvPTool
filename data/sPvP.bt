@@ -171,7 +171,7 @@ local tbl =
 									},
 									settings = 
 									{
-										duration = 5000,
+										duration = 7500,
 									},
 									variables = 
 									{
@@ -357,93 +357,12 @@ local tbl =
 									},
 									variables = 
 									{
-										finishcode = "",
-										info = "Find Aggro Target and Set the aggro context.combat_targetid",
-										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local target = context.GetBestAggroTarget()\nif (table.valid(target)) then\n\t\tif(context.combat_targetid ~= target.id) then\n\t\t\t\tPlayer:StopMovement()\n\t\tend\n\t\tcontext.combat_targetid = target.id\n\t\tcontext.combat_moveintocombatrange = true\n\t\tcontext.status = \"Attacking Enemy (ID:\"..tostring(context.combat_targetid)..\")\"\n\t\tself:success()\n\t\treturn\n\nelse\n\t\tcontext.combat_targetid = nil\nend\nself:fail()\n",
-										startcode = "",
-									},
-								},
-								
-								{
-									class = "PrioritySelector",
-									nodes = 
-									{
-										
-										{
-											class = "Action",
-											nodes = 
-											{
-											},
-											settings = 
-											{
-											},
-											variables = 
-											{
-												finishcode = "",
-												info = "Aggro CombatOverWatch - updates context.combat_target ",
-												monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-												runcode = "if ( context.combat_targetid ) then\n\tlocal target = CharacterList:Get(context.combat_targetid) or GadgetList:Get(context.combat_targetid)\n\tif (table.valid(target) and not gw2_blacklistmanager.CheckBlacklistEntry(GetString(\"Monsters\"),target.contentID) and (target.isAggro or target.isplayer) and target.attackable and target.alive and target.onmesh) then\n\t\tcontext.combat_target = target\n\t\tcontext.combat_targetid = target.id\n\t\tcontext.combat_targetpos = target.pos\n\n\t\t-- switch aggro target if a better one was found\n\t\tlocal bettertarget = gw2_common_functions.GetBestAggroTarget()\n\t\tif (table.valid(bettertarget) and bettertarget.id ~= target.id and not gw2_blacklistmanager.CheckBlacklistEntry(GetString(\"Monsters\"),bettertarget.contentID)) then\n\t\t\tlocal pdist = target.pathdistance\n\t\t\tif ( pdist < 9999999 ) then\n\t\t\t\tcontext.combat_target = bettertarget\n\t\t\t\tcontext.combat_targetid = bettertarget.id\n\t\t\t\tcontext.combat_targetpos = bettertarget.pos\n\t\t\tend\n\t\tend\n\t\t\n\telse\n\t\td(\"[HandleAggro] - Aggro Target is dead or gone\")\n\t\tcontext.combat_targetid = nil\n\t\tcontext.combat_target = nil\n\t\tcontext.combat_targetpos = nil\n\tend\nend\nself:fail()",
-												startcode = "",
-											},
-										},
-										
-										{
-											class = "SubTree",
-											nodes = 
-											{
-											},
-											settings = 
-											{
-											},
-											variables = 
-											{
-												filename = "CombatHandler.st",
-											},
-										},
-									},
-									settings = 
-									{
-									},
-									variables = 
-									{
-										info = "",
-										monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) GUI:Text('Active Child: '..tostring(self.runningTask or 'None'))",
-									},
-								},
-							},
-							settings = 
-							{
-							},
-							variables = 
-							{
-								filename = "HandleAggro",
-								info = "",
-								monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) GUI:Text('Active Child: '..tostring(self.actualTask or 'None'))",
-							},
-						},
-						
-						{
-							class = "Sequence",
-							nodes = 
-							{
-								
-								{
-									class = "Action",
-									nodes = 
-									{
-									},
-									settings = 
-									{
-									},
-									variables = 
-									{
 										filename = "",
 										finishcode = "",
-										info = "Find Enemy which we can finish",
+										info = "Find Enemy which we can finish (closeby)",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "if ( not context.finishtargetid ) then\n\t\tif( ml_global_information.Player_Health.percent > 15) then\n\t\t\t\tlocal targetlist = CharacterList(\"interactable,attackable,shortestpath,onmesh,attackable,downed,maxdistance=1000,maxpathdistance=2000\")\n\t\t\t\tif ( ValidTable(targetlist) ) then\t\t\t\n\t\t\t\t\tlocal target = select(2,next(targetlist))\n\t\t\t\t\tif ( target ) then\n\t\t\t\t\t\t\tcontext.finishtargetid = target.id\n\t\t\t\t\t\t\tcontext.status = \"Finishing Enemy (ID:\"..tostring(context.finishtargetid)..\")\"\n\t\t\t\t\t\t\tself:success()\n\t\t\t\t\t\t\treturn\n\t\t\t\t\tend\n\t\t\t\tend\n\t\tend\nelse\n\t\tself:success()\n\t\treturn\nend\ncontext.finishtargetid = nil\nself:fail()",
+										runcode = "if( ml_global_information.Player_Health.percent > 15) then\n\t\tlocal targetlist = CharacterList(\"interactable,attackable,shortestpath,onmesh,attackable,downed,maxdistance=500,maxpathdistance=600\")\n\t\tif ( ValidTable(targetlist) ) then\t\t\t\n\t\t\tlocal target = select(2,next(targetlist))\n\t\t\tif ( target ) then\n\t\t\t\t\tcontext.finishtargetid = target.id\n\t\t\t\t\tcontext.status = \"Finishing \"..tostring(target.name)\n\t\t\t\t\tself:success()\n\t\t\t\t\treturn\n\t\t\tend\n\t\tend\nend\ncontext.finishtargetid = nil\nself:fail()",
 										startcode = "",
 										subtreeuicode = "",
 									},
@@ -460,11 +379,11 @@ local tbl =
 									variables = 
 									{
 										filename = "",
-										finishcode = "",
-										info = "Finish Enemy",
+										finishcode = "Player:StopMovement()",
+										info = "Finish Enemy (closeby)",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "if ( context.finishtargetid ) then\n\t\tlocal target = CharacterList:Get(context.finishtargetid)\n\t\tif ( table.valid(target) and target.downed and target.onmesh and target.interactable) then\n\t\t\t\tif ( target.isininteractrange ) then\n\t\t\t\t\t\tlocal curTarget = Player:GetTarget()\n\t\t\t\t\t\tif ( not curTarget or curTarget.id ~= target.id ) then\n\t\t\t\t\t\t\t\tPlayer:SetTarget(target.id)\n\t\t\t\t\t\t\t\tself:running()\n\t\t\t\t\t\t\t\treturn\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\tPlayer:Interact( target.id )\n\t\t\t\t\t\t\t\td(\"[sPvP] - Finishing Enemy..\")\n\t\t\t\t\t\t\t\tself:success()\n\t\t\t\t\t\t\t\treturn\n\t\t\t\t\t\tend\n\t\t\t\telse\n\t\t\t\t\t\tlocal p = target.pos\n\t\t\t\t\t\tif ( NavigationManager:MoveTo(p.x,p.y,p.z) > 0 ) then\n\t\t\t\t\t\t\tself:running()\n\t\t\t\t\t\t\treturn\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\td(\"[sPvP] - Cannot find a path to the Finish-Enemy\")\n\t\t\t\t\t\tend\n\t\t\t\tend\n\t\tend\nend\ncontext.finishtargetid = nil\nml_navigation.StopMovement()\nself:fail()",
+										runcode = "if ( context.finishtargetid ) then\n\t\tlocal target = CharacterList:Get(context.finishtargetid)\n\t\tif ( table.valid(target) and target.downed and target.onmesh and target.interactable) then\n\t\t\t\tif ( target.isininteractrange ) then\n\t\t\t\t\t\tlocal curTarget = Player:GetTarget()\t\t\t\t\t\t\n\t\t\t\t\t\tif ( not curTarget or curTarget.id ~= target.id ) then\n\t\t\t\t\t\t\t\tPlayer:SetTarget(target.id)\n\t\t\t\t\t\tend\n\t\t\t\t\t\tPlayer:Interact( target.id )\n\t\t\t\t\t\td(\"[sPvP] - Finishing Enemy..\")\n\t\t\t\t\t\tcontext.status = \"Finishing \"..tostring(target.name)\n\t\t\t\t\t\tself:success()\n\t\t\t\t\t\treturn\n\t\t\t\t\t\t\n\t\t\t\telse\n\t\t\t\t\t\tlocal p = target.pos\n\t\t\t\t\t\tif ( NavigationManager:MoveTo(p.x,p.y,p.z) > 0 ) then\n\t\t\t\t\t\t\t\tcontext.status = \"Move to Finish \"..tostring(target.name)\n\t\t\t\t\t\t\t\tself:running()\n\t\t\t\t\t\t\t\treturn\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\td(\"[sPvP] - Cannot find a path to the Finish-Enemy\")\n\t\t\t\t\t\tend\n\t\t\t\tend\n\t\tend\nend\ncontext.finishtargetid = nil\nPlayer:StopMovement()\nself:fail()",
 										startcode = "",
 										subtreeuicode = "",
 									},
@@ -506,6 +425,85 @@ local tbl =
 							},
 							variables = 
 							{
+								filename = "HandleAggro.st",
+							},
+						},
+						
+						{
+							class = "Sequence",
+							nodes = 
+							{
+								
+								{
+									class = "Action",
+									nodes = 
+									{
+									},
+									settings = 
+									{
+									},
+									variables = 
+									{
+										finishcode = "",
+										info = "Finish Enemies which are further away",
+										monitorcode = "",
+										runcode = "if( ml_global_information.Player_Health.percent > 15) then\n\t\tlocal targetlist = CharacterList(\"interactable,attackable,shortestpath,onmesh,attackable,downed,maxdistance=1000,maxpathdistance=2000\")\n\t\tif ( ValidTable(targetlist) ) then\t\t\t\n\t\t\tlocal target = select(2,next(targetlist))\n\t\t\tif ( target ) then\n\t\t\t\t\tcontext.finishtargetid = target.id\n\t\t\t\t\tcontext.status = \"Finishing \"..tostring(target.name)\n\t\t\t\t\tself:success()\n\t\t\t\t\treturn\n\t\t\tend\n\t\tend\nend\ncontext.finishtargetid = nil\nself:fail()",
+										startcode = "",
+									},
+								},
+								
+								{
+									class = "Action",
+									nodes = 
+									{
+									},
+									settings = 
+									{
+									},
+									variables = 
+									{
+										finishcode = "",
+										info = "Finish Enemy",
+										monitorcode = "",
+										runcode = "if ( context.finishtargetid ) then\n\t\tlocal target = CharacterList:Get(context.finishtargetid)\n\t\tif ( table.valid(target) and target.downed and target.onmesh and target.interactable) then\n\t\t\t\tif ( target.isininteractrange ) then\n\t\t\t\t\t\tlocal curTarget = Player:GetTarget()\t\t\t\t\t\t\n\t\t\t\t\t\tif ( not curTarget or curTarget.id ~= target.id ) then\n\t\t\t\t\t\t\t\tPlayer:SetTarget(target.id)\n\t\t\t\t\t\tend\n\t\t\t\t\t\tPlayer:Interact( target.id )\n\t\t\t\t\t\td(\"[sPvP] - Finishing Enemy..\")\n\t\t\t\t\t\tcontext.status = \"Finishing \"..tostring(target.name)\n\t\t\t\t\t\tself:success()\n\t\t\t\t\t\treturn\n\t\t\t\t\t\t\n\t\t\t\telse\n\t\t\t\t\t\tlocal p = target.pos\n\t\t\t\t\t\tif ( NavigationManager:MoveTo(p.x,p.y,p.z) > 0 ) then\n\t\t\t\t\t\t\t\tcontext.status = \"Move to Finish \"..tostring(target.name)\n\t\t\t\t\t\t\t\tself:running()\n\t\t\t\t\t\t\t\treturn\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t\td(\"[sPvP] - Cannot find a path to the Finish-Enemy\")\n\t\t\t\t\t\tend\n\t\t\t\tend\n\t\tend\nend\ncontext.finishtargetid = nil\nPlayer:StopMovement()\nself:fail()",
+										startcode = "",
+									},
+								},
+								
+								{
+									class = "Wait",
+									nodes = 
+									{
+									},
+									settings = 
+									{
+										duration = 1000,
+									},
+									variables = 
+									{
+										monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) if ( self.starttime ) then\tif ( self:getState() == 'success' ) then GUI:Text('Passed Time: '..tostring(round(self.settings.duration/1000))..' s') else GUI:Text('Passed Time: '..tostring(round(GetTickCount() - self.starttime,2 ))..' s') end else GUI:Text('Passed Time: 0 ms') end",
+									},
+								},
+							},
+							settings = 
+							{
+							},
+							variables = 
+							{
+								monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) GUI:Text('Active Child: '..tostring(self.actualTask or 'None'))",
+							},
+						},
+						
+						{
+							class = "SubTree",
+							nodes = 
+							{
+							},
+							settings = 
+							{
+							},
+							variables = 
+							{
 								filename = "ReviveHandler.st",
 							},
 						},
@@ -523,7 +521,7 @@ local tbl =
 								finishcode = "",
 								info = "Capturing Point",
 								monitorcode = "",
-								runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance <= 200 ) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point \"..tostring(gadget.name)\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n",
+								runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance <= 180 ) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point \"..tostring(gadget.name)\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n",
 								startcode = "",
 							},
 						},
@@ -548,7 +546,7 @@ local tbl =
 										info = "Find and walk to a Capture Point",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance > 200 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Walking to Capturing Point..\"\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\t\t\t\nend\nself:fail()\n",
+										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance > 180 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Move to Capture \"..gadget.name\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\t\t\t\nend\nself:fail()\n",
 										startcode = "",
 										subtreeuicode = "",
 									},
@@ -601,7 +599,7 @@ local tbl =
 										finishcode = "if ( context.smmode ) then\n\t\tSettings.GW2Minion.smmode = context.smmode\nend",
 										info = "Find Target and Set the aggro context.combat_targetid",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "-- Getting the nearest enemy on the map\nlocal enemylist = CharacterList(\"attackable,player,hostile,alive,nearest,shortestpath,exclude_contentid=\"..gw2_blacklistmanager.GetExcludeString(GetString(\"Monsters\")))\nif(table.valid(enemylist)) then\n\t\tlocal id,target = next(enemylist)\n\t\tif(table.valid(target)) then\n\t\t\t\tcontext.combat_targetid = id\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\ncontext.combat_targetid = nil\nself:fail()\n\n",
+										runcode = "-- Getting the nearest enemy on the map\nlocal enemylist = CharacterList(\"attackable,player,hostile,alive,nearest,shortestpath,exclude_contentid=\"..gw2_blacklistmanager.GetExcludeString(GetString(\"Monsters\")))\nif(table.valid(enemylist)) then\n\t\tlocal id,target = next(enemylist)\n\t\tif(table.valid(target)) then\n\t\t\t\tcontext.combat_targetid = id\n\t\t\t\tcontext.combat_targetpos = target.pos\n\t\t\t\tcontext.status = \"Attacking Enemy \"..target.name\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\ncontext.combat_targetid = nil\nself:fail()\n\n",
 										startcode = "",
 									},
 								},
