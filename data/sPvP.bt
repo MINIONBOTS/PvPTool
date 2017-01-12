@@ -260,11 +260,11 @@ local tbl =
 									},
 									settings = 
 									{
-										duration = 15000,
+										duration = 20300,
 									},
 									variables = 
 									{
-										info = "Waiting 3 seconds before we check again if the match started",
+										info = "Waiting some seconds before we check again if the match started",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState())) if ( self.starttime ) then\tif ( self:getState() == 'success' ) then GUI:Text('Passed Time: '..tostring(round(self.settings.duration/1000))..' s') else GUI:Text('Passed Time: '..tostring(round(GetTickCount() - self.starttime,2 ))..' s') end else GUI:Text('Passed Time: 0 ms') end",
 									},
 								},
@@ -521,7 +521,7 @@ local tbl =
 								finishcode = "",
 								info = "Capturing Point",
 								monitorcode = "",
-								runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance <= 180 ) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point \"..tostring(gadget.name)\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n",
+								runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance <= 180 or gadget.pathdistance <= 180) then\n\t\t\t\tif (Player:IsMoving()) then\n\t\t\t\t\t\tPlayer:StopMovement()\n\t\t\t\tend\t\t\t\t\n\t\t\t\tcontext.status = \"Capturing Point \"..tostring(gadget.name)\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\nend\nself:fail()\n",
 								startcode = "",
 							},
 						},
@@ -546,7 +546,7 @@ local tbl =
 										info = "Find and walk to a Capture Point",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance > 180 ) then\t\t\t\t\t\t\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Move to Capture \"..gadget.name\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\t\t\t\nend\nself:fail()\n",
+										runcode = "local gadget = context.PvPGetBestCapturePoint()\nif ( table.valid(gadget) ) then\t\t\t\t\n\t\tif ( gadget.distance > 180 and gadget.pathdistance > 180 ) then\t-- this is a bit silly, but needed, because cappoints are far up in the air sometimes\n\t\t\t\tcontext.moveto_position = gadget.pos\n\t\t\t\tcontext.status = \"Move to Capture \"..gadget.name\n\t\t\t\tself:success()\n\t\t\t\treturn\n\t\tend\t\t\t\nend\nself:fail()\n",
 										startcode = "",
 										subtreeuicode = "",
 									},
