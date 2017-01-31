@@ -100,18 +100,17 @@ RegisterEventHandler("RefreshBehaviorFiles", spvp.LoadBehaviorFiles)
 -- Add helper Functions to the BTree context, so we can call these functions from inside any BTree Node
 spvp.btreecontext.PvPStartGatesOpen = function()
 	-- Get the closest Gate to the gate position by map and check it's state if it is open
-	local gatelist = GadgetList("contentid=17513,maxdistance=5000")
+	local gatelist = GadgetList("contentid=17513")
 	if ( table.valid(gatelist) ) then		
 		local currentmapid = Player.localmapid or 0
 		local id, gate = next(gatelist)
 		while ( id and gate ) do
 			if(( gate.type == 5 and gate.status == 464399) or (gate.type == 17 )) then
 
--- TODO: ADD ALL OTHER POSITIONS NEAR THE GATES OF EACH MAP HERE	
-				
+				-- TODO: ADD ALL OTHER POSITIONS NEAR THE GATES OF EACH MAP HERE	
 				-- Battle of Champions
 				if ( currentmapid == 1011 ) then	
-					if ( math.distance3d(gate.pos, { x= -4584, y= 4152, z= -900 }) < 100 ) then return true end 	-- Blue Team
+					if ( math.distance3d(gate.pos, { x= -5057.98, y= 3812.58, z= -912.76 }) < 100 ) then return true end 	-- Blue Team
 										
 				-- Forest of Nifhel
 				elseif( currentmapid == 554 ) then
@@ -149,7 +148,6 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 		end
 	end  
 	
-
    return false
 end
 
