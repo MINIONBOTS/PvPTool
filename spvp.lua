@@ -38,7 +38,7 @@ function spvp.ReloadBTree()
 			
 			LoadContext = function() return spvp.GetContext() end,	-- Is called when the BTree is started. Allows us to supply a custom context table to the BTree
 			Reload = function() spvp.LoadBehaviorFiles() end,				-- Called when the BTree was changed and saved in the BT-Editor. Reload all addon bt files here.
-			private = true,																	-- if set, it will be treated as a private addon, loadable from a .paf file.
+			private = spvp.modulefunctions ~= nil,																	-- if set, it will be treated as a private addon, loadable from a .paf file.
 			LoadSubTree = function(filename) return spvp.LoadSubtreeData(filename) end,	-- Required for private addons with additional private sub-behavior trees
 		}
 	
