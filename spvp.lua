@@ -181,10 +181,13 @@ spvp.btreecontext.PvPGetBestCapturePoint = function()
 				spvp.btreecontext.currentteam == "blue" and gadget.status == 4274 or
 				gadget.status == 3267563698 or
 				gadget.status == 207234327 or
+				gadget.status == 1482872194 or	-- when the shit switches factions it is shortly this number 
 				gadget.status == 5907735) then		
 				if ( gadget.meshpos.distance < 999999  and ( not nearestcapturepoint or gadget.distance < nearestcapturepoint.distance)) then
 					nearestcapturepoint = gadget
-				end				
+				end
+			elseif ( gadget.distance < 1000 ) then
+				d(gadget.status)
 			end
 			id,gadget = next(glist,id)
 		end
