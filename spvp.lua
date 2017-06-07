@@ -141,6 +141,11 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 				elseif( currentmapid == 1171 ) then
 					if ( math.distance3d(gate.pos, { x= 4934.04, y= -2995.06, z= -500.07 }) < 100 ) then return true end 	-- Red Team
 					if ( math.distance3d(gate.pos, { x= -4947.09, y= 3018.45, z= -500.07 }) < 100 ) then return true end 	-- Blue Team
+               
+            -- Rache des Steinbocks
+				elseif( currentmapid == 1163 ) then
+					if ( math.distance3d(gate.pos, { x= -4525.19, y= -3155.21, z= -1379.11 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= 4481.84, y= -3111.80, z= -1379.11 }) < 100 ) then return true end 	-- Blue Team
 											
 				end
 			end
@@ -172,6 +177,7 @@ end
 
 -- To get the nearest not fully captured Point
 spvp.btreecontext.PvPGetBestCapturePoint = function()
+   local currentmapid = Player.localmapid or 0
 	local nearestcapturepoint
 	local glist = GadgetList("type=2")
 	if ( table.valid(glist)) then
@@ -182,10 +188,15 @@ spvp.btreecontext.PvPGetBestCapturePoint = function()
 				gadget.status == 3267563698 or
 				gadget.status == 207234327 or
 				gadget.status == 1482872194 or	-- when the shit switches factions it is shortly this number 
-				gadget.status == 5907735) then		
-				if ( gadget.meshpos.distance < 999999  and ( not nearestcapturepoint or gadget.distance < nearestcapturepoint.distance)) then
-					nearestcapturepoint = gadget
-				end
+				gadget.status == 5907735) then
+            
+               if currentmapid == 1163 and math.distance3d(gadget.pos, { x= -12.56, y= 2099.06, z= -298.02 }) < 100 then -- Glocke Rache des Steinbocks
+                  -- It is blacklisted - Skip it
+               else
+                  if ( gadget.meshpos.distance < 999999  and ( not nearestcapturepoint or gadget.distance < nearestcapturepoint.distance)) then
+                     nearestcapturepoint = gadget
+                  end
+               end
 			elseif ( gadget.distance < 1000 ) then
 				d(gadget.status)
 			end
