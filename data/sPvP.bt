@@ -362,7 +362,7 @@ local tbl =
 										info = "Find Enemy which we can finish (closeby)",
 										menucode = "",
 										monitorcode = "GUI:Text('Last State: '..tostring(self:getState()))",
-										runcode = "if( ml_global_information.Player_Health.percent > 15) then\n\t\tlocal targetlist = CharacterList(\"interactable,attackable,shortestpath,onmesh,attackable,downed,maxdistance=800,maxpathdistance=900\")\n\t\tif ( ValidTable(targetlist) ) then\t\t\t\n\t\t\tlocal target = select(2,next(targetlist))\n\t\t\tif ( target ) then\n\t\t\t\t\tcontext.finishtargetid = target.id\n\t\t\t\t\tcontext.status = \"Finishing \"..tostring(target.name)\n\t\t\t\t\tself:success()\n\t\t\t\t\treturn\n\t\t\tend\n\t\tend\nend\ncontext.finishtargetid = nil\nself:fail()",
+										runcode = "if ( Settings.GW2Minion.finishenemyassist == true) then\nif( ml_global_information.Player_Health.percent > 15) then\n\t\tlocal targetlist = CharacterList(\"interactable,attackable,shortestpath,onmesh,attackable,downed,maxdistance=800,maxpathdistance=900\")\n\t\tif ( ValidTable(targetlist) ) then\t\t\t\n\t\t\tlocal target = select(2,next(targetlist))\n\t\t\tif ( target ) then\n\t\t\t\t\tcontext.finishtargetid = target.id\n\t\t\t\t\tcontext.status = \"Finishing \"..tostring(target.name)\n\t\t\t\t\tself:success()\n\t\t\t\t\treturn\n\t\t\tend\n\t\tend\nend\nend\ncontext.finishtargetid = nil\nself:fail()",
 										startcode = "",
 										subtreeuicode = "",
 									},
