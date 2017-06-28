@@ -139,8 +139,8 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 
 				-- Ewiges Kolosseum
 				elseif( currentmapid == 1171 ) then
-					if ( math.distance3d(gate.pos, { x= 4934.04, y= -2995.06, z= -500.07 }) < 100 ) then return true end 	-- Red Team
-					if ( math.distance3d(gate.pos, { x= -4947.09, y= 3018.45, z= -500.07 }) < 100 ) then return true end 	-- Blue Team
+					if ( math.distance3d(gate.pos, { x= 5145.99, y= -2484.39, z= -500.07 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= -5300.51, y= 2493.84, z= -500.07 }) < 100 ) then return true end 	-- Blue Team
                
             -- Rache des Steinbocks
 				elseif( currentmapid == 1163 ) then
