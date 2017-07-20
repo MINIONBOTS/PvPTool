@@ -122,6 +122,11 @@ spvp.btreecontext.PvPStartGatesOpen = function()
 					if ( math.distance3d(gate.pos, { x= -1394.88, y= 4965.36, z= -3141.97 }) < 100 ) then return true end 	-- Red Team
 					if ( math.distance3d(gate.pos, { x= -1382.77, y= -1630.64, z= -3141.97 }) < 100 ) then return true end 	-- Blue Team
 					
+            -- Tempel of the Silent
+				elseif( currentmapid == 875 ) then
+					if ( math.distance3d(gate.pos, { x= 2463.60, y= -789.67, z= -3782.63 }) < 100 ) then return true end 	-- Red Team
+					if ( math.distance3d(gate.pos, { x= -6698.29, y= 139.00, z= -3748.56 }) < 100 ) then return true end 	-- Blue Team
+					
 				-- Vermächtnis des Feindfeuers
 				elseif( currentmapid == 795 ) then
 					if ( math.distance3d(gate.pos, { x= -1990.01, y= -2303.84, z= -934.43 }) < 100 ) then return true end 	-- Red Team
