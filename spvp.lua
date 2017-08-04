@@ -3,6 +3,7 @@ spvp.modulefunctions = GetPrivateModuleFunctions()
 spvp.btreecontext = {}
 spvp.gateswhereclosed = false
 
+-- Settings.GW2Minion.combatmovement
 -- Required for private addons with additional private sub-behavior trees
 function spvp.LoadSubtreeData(filename)
 	if ( FileExists(GetLuaModsPath()  .. "\\PvPtool\\data\\"..filename)) then 
@@ -96,6 +97,23 @@ function spvp.LoadBehaviorFiles()
 end
 RegisterEventHandler("RefreshBehaviorFiles", spvp.LoadBehaviorFiles)
 
+-- Add helper Functions to the BTree context, so we can call these functions from inside any BTree Node
+spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint = function(capturePoint)
+
+   if capturePoint ~= nil then
+      if (capturePoint.meshpos.distance < 600) then
+         if (Settings.GW2Minion.combatmovement) then
+            d("Disabling combatmovement")
+            Settings.GW2Minion.combatmovement = false
+         end
+      else
+         if (Settings.GW2Minion.combatmovement == false) then
+            d("Enabling combatmovement")
+            Settings.GW2Minion.combatmovement = true
+         end
+      end
+   end
+end
 
 -- Add helper Functions to the BTree context, so we can call these functions from inside any BTree Node
 spvp.btreecontext.PvPStartGatesOpen = function()
@@ -243,6 +261,7 @@ function spvp.GetContext()
 	spvp.btreecontext.PvPFightStarted = spvp.btreecontext.PvPFightStarted
 	spvp.btreecontext.PvPGetBestCapturePoint = spvp.btreecontext.PvPGetBestCapturePoint
 	spvp.btreecontext.GetBestAggroTarget = spvp.btreecontext.GetBestAggroTarget
+   spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint = spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint
 		
 	return spvp.btreecontext
 end
