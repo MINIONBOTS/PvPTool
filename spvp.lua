@@ -181,21 +181,7 @@ end
 
 -- Used in Match Start...another way to find out if the match started already.
 spvp.btreecontext.PvPFightStarted = function()
-	-- Check the HP of a Team, if anyone has lower health, the match started already
-	local team = PvPManager:GetTeam(1)
-	if ( ValidTable(team) ) then
-		local id,v = next(team)
-		while ( id ~= nil ) do
-			if ( v.incombat ) then 
-				local hp = v.health
-				if (table.valid(hp) and hp.percent > 0 and hp.percent < 80 )then
-					return true
-				end
-			end
-			id,v = next(team, id)
-		end
-	end   
-	return false
+	return PvPManager:IsMatchStarted()
 end
 
 -- To get the nearest not fully captured Point
@@ -216,7 +202,7 @@ spvp.btreecontext.PvPGetBestCapturePoint = function()
                if currentmapid == 1163 and math.distance3d(gadget.pos, { x= -12.56, y= 2099.06, z= -298.02 }) < 100 then -- Glocke Rache des Steinbocks
                   -- It is blacklisted - Skip it
                else
-                  if ( gadget.meshpos.distance < 999999  and ( not nearestcapturepoint or gadget.distance < nearestcapturepoint.distance)) then
+                  if ( gadget.meshpos and gadget.meshpos.distance < 999999  and ( not nearestcapturepoint or gadget.distance < nearestcapturepoint.distance)) then
                      nearestcapturepoint = gadget
                   end
                end
@@ -257,7 +243,6 @@ end
 	
 -- Is called when the BTree is started. Allows us to supply a custom context table to the BTree
 function spvp.GetContext()
-	spvp.btreecontext.PvPStartGatesOpen = spvp.btreecontext.PvPStartGatesOpen
 	spvp.btreecontext.PvPFightStarted = spvp.btreecontext.PvPFightStarted
 	spvp.btreecontext.PvPGetBestCapturePoint = spvp.btreecontext.PvPGetBestCapturePoint
 	spvp.btreecontext.GetBestAggroTarget = spvp.btreecontext.GetBestAggroTarget
