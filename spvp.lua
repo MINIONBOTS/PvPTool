@@ -100,7 +100,7 @@ RegisterEventHandler("RefreshBehaviorFiles", spvp.LoadBehaviorFiles)
 -- Add helper Functions to the BTree context, so we can call these functions from inside any BTree Node
 spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint = function(capturePoint)
 
-   if capturePoint ~= nil then
+   if (capturePoint ~= nil and capturePoint.meshpos ) then
       if (capturePoint.meshpos.distance < 600) then
          if (Settings.GW2Minion.combatmovement) then
             d("Disabling combatmovement")
@@ -207,7 +207,7 @@ spvp.btreecontext.PvPGetBestCapturePoint = function()
                   end
                end
 			elseif ( gadget.distance < 1000 ) then
-				d(gadget.status)
+				--d("[spvp:PvPGetBestCapturePoint] - Status "..tostring(gadget.status))
 			end
 			id,gadget = next(glist,id)
 		end
@@ -221,14 +221,14 @@ spvp.btreecontext.GetBestAggroTarget = function()
 	local range = ml_global_information.AttackRange or 750
 	
 	if ( range < 200 ) then range = 750 end -- extend search range a bit for melee chars
-	if ( range > 1000 ) then range = 1000 end -- limit search range a bit for ranged chars
+	if ( range > 1000 ) then range = 1500 end -- limit search range a bit for ranged chars
 	
 	-- Try to get Aggro Enemy Players with los in range first
 	local target = gw2_common_functions.GetCharacterTargetExtended("player,onmesh,maxdistance="..tostring(range))
 		
-	if(table.valid(target) and (not target.attackable or target.pathdistance >= 9999999)) then
-		gw2_blacklistmanager.AddBlacklistEntry(GetString("Temporary Combat"), target.id, target.name, 5000)
-		d("[GetBestAggroTarget] - Blacklisting "..target.name.." ID: "..tostring(target.id))
+	if(table.valid(target) and (not target.attackable or not target.isreachable)) then
+		gw2_blacklistmanager.AddBlacklistEntry(GetString("Temporary Combat"), target.id, target.name, 5000, gw2_common_functions.BlackListUntilReachableAndAttackable)
+		d("[spvp:GetBestAggroTarget] - Blacklisting "..target.name.." ID: "..tostring(target.id))
 		target = nil
 	end
 	
@@ -246,7 +246,8 @@ function spvp.GetContext()
 	spvp.btreecontext.PvPFightStarted = spvp.btreecontext.PvPFightStarted
 	spvp.btreecontext.PvPGetBestCapturePoint = spvp.btreecontext.PvPGetBestCapturePoint
 	spvp.btreecontext.GetBestAggroTarget = spvp.btreecontext.GetBestAggroTarget
-   spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint = spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint
-		
+    spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint = spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint
+	spvp.btreecontext.BlackListPlayerUntilReachable = gw2_common_functions.BlackListUntilReachableAndAttackable
+	
 	return spvp.btreecontext
 end
