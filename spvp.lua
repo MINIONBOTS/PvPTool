@@ -181,40 +181,128 @@ end
 
 -- Used in Match Start...another way to find out if the match started already.
 spvp.btreecontext.PvPFightStarted = function()
-	return PvPManager:IsMatchStarted()
+	if ( PvPManager:IsMatchStarted() ) then
+		if ( not spvp.startpos ) then
+			spvp.startpos = Player.pos
+		end
+		return true
+		
+	else
+		spvp.startpos = nil
+		spvp.cp_close = "Unknown"
+		spvp.cp_mid = "Unknown"
+		spvp.cp_far = "Unknown"
+	end
 end
 
 -- To get the nearest not fully captured Point
 spvp.btreecontext.PvPGetBestCapturePoint = function()
-   local currentmapid = Player.localmapid or 0
-	local nearestcapturepoint
+    local currentmapid = Player.localmapid or 0
+	local capturepoints = {}
 	local glist = GadgetList("type=2")
 	if ( table.valid(glist)) then
 		local id,gadget = next(glist)
 		while (id and gadget) do
-			if (spvp.btreecontext.currentteam == "red" and gadget.status == 185730 or
-				spvp.btreecontext.currentteam == "blue" and gadget.status == 4274 or
-				gadget.status == 3267563698 or
-				gadget.status == 207234327 or
-				gadget.status == 1482872194 or	-- when the shit switches factions it is shortly this number 
-				gadget.status == 5907735) then
+			local status = gadget.status
+			if (status == 185730 or
+				status == 4274 or
+				status == 3267563698 or
+				status == 207234327 or
+				status == 1482872194 or	-- when the shit switches factions it is shortly this number 
+				status == 5907735) then
             
                if currentmapid == 1163 and math.distance3d(gadget.pos, { x= -12.56, y= 2099.06, z= -298.02 }) < 100 then -- Glocke Rache des Steinbocks
                   -- It is blacklisted - Skip it
                else
-                  if ( gadget.meshpos and gadget.meshpos.distance < 999999  and ( not nearestcapturepoint or gadget.distance < nearestcapturepoint.distance)) then
-                     nearestcapturepoint = gadget
-                  end
+					if ( gadget.isreachable ) then
+						capturepoints[#capturepoints + 1] = gadget	
+					else
+						local mpos = gadget.meshpos
+						if ( mpos and mpos.meshdistance < 500 ) then
+							capturepoints[#capturepoints + 1] = gadget	
+						end					
+					end
                end
-			elseif ( gadget.distance < 1000 ) then
+			--elseif ( gadget.distance < 1000 ) then
 				--d("[spvp:PvPGetBestCapturePoint] - Status "..tostring(gadget.status))
 			end
 			id,gadget = next(glist,id)
 		end
 	end
-	if ( nearestcapturepoint ) then
-		return nearestcapturepoint
-	end	
+	
+	if (#capturepoints > 0 ) then
+		-- if we know where our spawnpoint is, get the 2 closest ones, else just the nearest one		
+		local capturepointsbydist = {}		
+		for i,k in pairs (capturepoints) do
+			if (spvp.startpos) then
+				capturepointsbydist[math.round(math.distance3d(spvp.startpos,k.pos),0)] = k
+			else
+				capturepointsbydist[ k.distance ] = k
+			end
+		end
+		
+		if (spvp.startpos) then
+			local count = 0
+			local fallback = nil
+			local cpclose = nil
+			local cpmid = nil
+			local cpfar = nil
+			for i,k in spairs ( capturepointsbydist ) do
+				
+				local status = k.status
+				
+					
+				if ( count == 0 ) then
+					spvp.cp_close = "Ours"
+				elseif (count == 1 ) then
+					spvp.cp_mid = "Ours"
+				elseif (count == 2 ) then
+					spvp.cp_far = "Ours"					
+				end					
+					
+				if (spvp.btreecontext.currentteam == "red" and status == 185730 or
+					spvp.btreecontext.currentteam == "blue" and status == 4274 or
+					status == 3267563698 or
+					status == 207234327 or
+					status == 1482872194 or	-- when the shit switches factions it is shortly this number 
+					status == 5907735) then
+					-- capturable
+					if ( count == 0 ) then
+						spvp.cp_close = "Enemy"
+						cpclose = k
+					elseif (count == 1 ) then
+						spvp.cp_mid = "Enemy"
+						cpmid = k
+					elseif (count == 2 ) then
+						spvp.cp_far = "Enemy"
+						cpfar = k
+					end
+					if ( not fallback ) then
+						fallback = k
+					end
+				end
+				count = count + 1
+			end
+			
+			if (cpmid) then 
+				return cpmid
+			elseif (cpclose) then
+				return cpclose
+			end
+			
+			if ( not cpclose and not cpmid and not cpfar and fallback) then
+				return fallback
+			end
+		
+		else
+			-- return closest uncapped one
+			if ( table.size(capturepointsbydist) > 0 ) then
+				for i,k in spairs (capturepointsbydist) do
+					return k
+				end
+			end
+		end
+	end
 end
 
 spvp.btreecontext.GetBestAggroTarget = function()
@@ -240,6 +328,57 @@ spvp.btreecontext.GetBestAggroTarget = function()
 	end
 	return nil
 end
+
+spvp.btreecontext.GetStartPos = function()
+	return spvp.startpos
+end
+
+spvp.btreecontext.GetCapturePointsTotal = function()
+	local count = 0
+	local glist = GadgetList("type=2")
+	if ( table.valid(glist)) then
+		local id,gadget = next(glist)
+		while (id and gadget) do
+			local status = gadget.status
+			if (status == 185730 or
+				status == 4274 or
+				status == 3267563698 or
+				status == 207234327 or
+				status == 1482872194 or	-- when the shit switches factions it is shortly this number 
+				status == 5907735) then
+            
+               if currentmapid == 1163 and math.distance3d(gadget.pos, { x= -12.56, y= 2099.06, z= -298.02 }) < 100 then -- Glocke Rache des Steinbocks
+                  -- It is blacklisted - Skip it
+               else
+					if ( gadget.isreachable ) then
+						count = count + 1
+					else
+						local mpos = gadget.meshpos
+						if ( mpos and mpos.meshdistance < 500 ) then
+							count = count + 1
+						end					
+					end
+               end
+			--elseif ( gadget.distance < 1000 ) then
+				--d("[spvp:PvPGetBestCapturePoint] - Status "..tostring(gadget.status))
+			end
+			id,gadget = next(glist,id)
+		end
+	end
+	return count
+end
+
+spvp.btreecontext.GetClose = function()	
+	return spvp.cp_close
+end
+
+spvp.btreecontext.GetMid = function()	
+	return spvp.cp_mid
+end
+
+spvp.btreecontext.GetFar = function()	
+	return spvp.cp_far
+end
 	
 -- Is called when the BTree is started. Allows us to supply a custom context table to the BTree
 function spvp.GetContext()
@@ -248,6 +387,13 @@ function spvp.GetContext()
 	spvp.btreecontext.GetBestAggroTarget = spvp.btreecontext.GetBestAggroTarget
     spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint = spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint
 	spvp.btreecontext.BlackListPlayerUntilReachable = gw2_common_functions.BlackListUntilReachableAndAttackable
+	spvp.btreecontext.GetStartPos = spvp.btreecontext.GetStartPos
+	spvp.btreecontext.GetCapturePointsTotal = spvp.btreecontext.GetCapturePointsTotal	
+	spvp.btreecontext.GetClose = spvp.btreecontext.GetClose	
+	spvp.btreecontext.GetMid = spvp.btreecontext.GetMid
+	spvp.btreecontext.GetFar = spvp.btreecontext.GetFar
+	
+	
 	
 	return spvp.btreecontext
 end
