@@ -100,19 +100,11 @@ RegisterEventHandler("RefreshBehaviorFiles", spvp.LoadBehaviorFiles)
 -- Add helper Functions to the BTree context, so we can call these functions from inside any BTree Node
 spvp.btreecontext.PvPDisableCombatMoveIfCloseToCapturepoint = function(capturePoint)
 
-   if (capturePoint ~= nil and capturePoint.meshpos ) then
-      if (capturePoint.meshpos.distance < 600) then
-         if (Settings.GW2Minion.combatmovement) then
-            d("Disabling combatmovement")
-            Settings.GW2Minion.combatmovement = false
-         end
-      else
-         if (Settings.GW2Minion.combatmovement == false) then
-            d("Enabling combatmovement")
-            Settings.GW2Minion.combatmovement = true
-         end
-      end
-   end
+	if (capturePoint ~= nil and capturePoint.meshpos ) then
+		if (capturePoint.meshpos.distance < 600) then
+			gw2_combat_movement:PreventCombatMovement()
+		end
+	end
 end
 
 -- Add helper Functions to the BTree context, so we can call these functions from inside any BTree Node
